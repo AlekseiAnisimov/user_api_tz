@@ -5,6 +5,7 @@ namespace App\Models;
 
 use App\Models\{Customer, CustomerEmail, CustomerPhone};
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class CustomerSearch
 {
@@ -124,6 +125,52 @@ class CustomerSearch
 
         $result  = [
             'customers' => $emailsList
+        ];
+
+        return $result;
+    }
+
+    public static function searchByAllParams($params): ?array
+    {
+        $query = Customer::query();
+        $lastName = $params['last_name'];
+        $firstName = $params['first_name'];
+        $phone = $params['phone'];
+        $email = $params['email'];
+
+
+        $query = DB::table('customer')
+            ->join('customer_phone', 'customer.id', '=', 'customer_phone.customer_id')
+            ->join('customer_email', 'customer.id', '=', 'customer_email.customer_id')
+            ->select('customer.*', 'customer_phone.phone', 'customer_email.email');
+
+        if (is_null($lastName)) {
+            $query->where('customer.last_name', 'like', "%$lastName%");
+        }
+
+        if (is_null($firstName)) {
+            $query->where('customer.first_name', 'like', "%$firstName%");
+        }
+
+        if (is_null($phone)) {
+            $query->where('customer_phone.phone', 'like', "%$phone%");
+        }
+
+        if (is_null($email)) {
+            $query->where('customer_email.email', 'like', "%$email%");
+        }
+
+        $customers = $query->get();
+
+        foreach ($customers as $key => $customer) {
+            $data[$customer->id]['last_name'] = $customer->last_name;
+            $data[$customer->id]['first_name'] = $customer->first_name;
+            $data[$customer->id]['phones'][] = (int)$customer->phone;
+            $data[$customer->id]['emails'][] = $customer->email;
+        }
+
+        $result  = [
+            'customers' => $data
         ];
 
         return $result;

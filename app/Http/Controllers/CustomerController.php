@@ -143,6 +143,9 @@ class CustomerController extends Controller
             case 'email':
                 $result = CustomerSearch::searchByEmail($body['email']);
                 break;
+            case 'all':
+                $result = CustomerSearch::searchByAllParams($body);
+                break;
 
         }
 
