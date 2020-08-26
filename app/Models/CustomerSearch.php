@@ -11,9 +11,9 @@ class CustomerSearch
     /**
      * @param string|null $lastName
      * @param string|null $firstName
-     * @return Collection|null
+     * @return array|null
      */
-    public static function searchByFio(?string $lastName, ?string $firstName): ?Collection
+    public static function searchByFio(?string $lastName, ?string $firstName): ?array
     {
 
         $query = Customer::query();
@@ -26,12 +26,30 @@ class CustomerSearch
             $query->where('first_name', 'like', "%$firstName%");
         }
 
-        return $query->get(['id', 'last_name', 'first_name']);
+        $customers = $query->get();
+        $data = [];
+        foreach ($customers as $customer) {
+            $id = (int)$customer->id;
+            $data[$id]['last_name'] = $customer->last_name;
+            $data[$id]['first_name'] = $customer->first_name;
+            foreach ($customer->customerPhones as $phones) {
+                $data[$id]['phone'][] = (int)$phones->phone;
+            }
+            foreach ($customer->customerEmails as $emails) {
+                $data[$id]['emails'][] = $emails->email;
+            }
+        }
+
+        $result = [
+            'customers' => $data
+        ];
+
+        return $result;
     }
 
     /**
      * @param integer|null $phone
-     * @return Collection|null
+     * @return array|null
      */
     public static function searchByPhone(?int $phone): ?array
     {
@@ -54,6 +72,7 @@ class CustomerSearch
 
                 $phonesList[$customer_id]['last_name'] = $customer->last_name;
                 $phonesList[$customer_id]['first_name'] = $customer->first_name;
+
                 foreach ($customer->customerEmails as $email) {
                     $phonesList[$customer_id]['emails'][] = $email->email;
                 }
