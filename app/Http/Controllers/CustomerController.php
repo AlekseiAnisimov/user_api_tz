@@ -95,4 +95,34 @@ class CustomerController extends Controller
 
         return response(['error' => ['message' => null], 'customer' => $body], 200);
     }
+
+    public function delete($id)
+    {
+        $customer = Customer::find($id);
+
+        if (is_null($customer)) {
+            return response(null, 404);
+        }
+
+        try {
+            DB::transaction(function () use ($customer, $id) {
+                $customer->delete();
+
+                $customerPhone = CustomerPhone::where('customer_id', $id)->get();
+                foreach ($customerPhone as $phone) {
+                    $phone->delete();
+                }
+
+                $customerEmail = CustomerEmail::where('customer_id', $id)->get();
+                foreach ($customerEmail as $email) {
+                    $email->delete();
+                }
+            });
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response(null, 400);
+        }
+
+        return response(null, 200);
+    }
 }
