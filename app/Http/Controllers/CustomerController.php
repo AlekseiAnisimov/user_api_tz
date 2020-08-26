@@ -131,14 +131,22 @@ class CustomerController extends Controller
     {
         $searchType = $request->get('id');
         $body = $request->all();
-        $result = [];
+        $result = null;
 
         switch ($searchType) {
             case 'fio':
                 $result = CustomerSearch::searchByFio($body['last_name'], $body['first_name']);
                 break;
+            case 'phone':
+                $result = CustomerSearch::searchByPhone($body['phone']);
+                break;
+
         }
 
-        return $result;
+        if (is_null($result)) {
+            return response([], 404);
+        }
+
+        return response($result, 200);
     }
 }
