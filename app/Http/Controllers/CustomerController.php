@@ -156,4 +156,61 @@ class CustomerController extends Controller
 
         return response($result, 200);
     }
+
+    public function update(Request $request, int $id)
+    {
+        $body = $request->all();
+        $valid = Validator::make($body, [
+            'last_name' => 'required|string|min:2|max:255',
+            'first_name' => 'required|string|min:2|max:255',
+            'phones' => 'array',
+            'phones.*' => 'integer',
+            'emails' => 'array',
+            'emails.*' => 'string|regex:/^.+@.+$/i'
+        ]);
+
+        if (sizeof($valid->errors()) > 0) {
+            return response(['error' => ['message' => $valid->getMessageBag()], 'customer' => null], 400);
+        }
+
+        $customers = Customer::find($id)->get();
+        if (is_null($customers)) {
+            return response(['customer' => null], 404);
+        }
+
+        try {
+            DB::transaction(function() use ($id, $body, $customers) {
+                $customers->last_name = $body['last_name'];
+                $customers->first_name = $body['first_name'];
+                $customers->save();
+
+                $customerPhones = CustomerPhone::where('category_id', $id)->get();
+                $customerPhones->delete();
+
+                foreach ($body['phones'] as $phone) {
+                    $customerPhones = new CustomerPhone();
+                    $customerPhones->category_id = $id;
+                    $customerPhones->phone = $phone;
+                    $customerPhones->save();
+                }
+
+                $customerEmails = CustomerEmail::where('category_id', $id)->get();
+                $customerEmails->delete();
+
+                foreach ($body['emails'] as $email) {
+                    $customerEmails = new CustomerEmail();
+                    $customerEmails->category_id = $id;
+                    $customerEmails->email = $email;
+                    $customerEmails->save();
+                }
+
+            });
+
+        } catch (\Throwable $e ) {
+            DB::rollBack();
+            return response(['error' => ['message' => $e->getMessage()], 'customer' => null], 400);
+        }
+
+        return response(['error' => ['message' => null], 'customer' => $body], 200);
+    }
 }

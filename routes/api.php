@@ -23,4 +23,5 @@ Route::prefix('v1')->group(function () {
     Route::post('customer', 'CustomerController@add');
     Route::delete('customer/{id}', 'CustomerController@delete');
     Route::post('customer/search', 'CustomerController@search');
+    Route::put('customer/{id}', 'CustomerController@update');
 });
