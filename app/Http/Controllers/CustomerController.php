@@ -129,7 +129,8 @@ class CustomerController extends Controller
 
     public function search(Request $request)
     {
-        $searchType = $request->get('id');
+        //TODO:: добавить валидацию
+        $searchType = $request->get('type');
         $body = $request->all();
         $result = null;
 

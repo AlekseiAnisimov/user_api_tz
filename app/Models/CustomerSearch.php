@@ -132,7 +132,6 @@ class CustomerSearch
 
     public static function searchByAllParams($params): ?array
     {
-        $query = Customer::query();
         $lastName = $params['last_name'];
         $firstName = $params['first_name'];
         $phone = $params['phone'];
