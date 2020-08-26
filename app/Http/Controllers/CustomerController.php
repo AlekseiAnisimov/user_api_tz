@@ -140,6 +140,9 @@ class CustomerController extends Controller
             case 'phone':
                 $result = CustomerSearch::searchByPhone($body['phone']);
                 break;
+            case 'email':
+                $result = CustomerSearch::searchByEmail($body['email']);
+                break;
 
         }
 

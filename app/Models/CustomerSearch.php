@@ -59,7 +59,7 @@ class CustomerSearch
             return $result;
         }
 
-        $phones = CustomerPhone::where('phone', 'like', "$phone")->get();
+        $phones = CustomerPhone::where('phone', 'like', "%$phone%")->get();
 
         $phonesList = [];
         $customerPreview = null;
@@ -83,6 +83,47 @@ class CustomerSearch
 
         $result  = [
             'customers' => $phonesList
+        ];
+
+        return $result;
+    }
+
+    /**
+     * @param integer|null $email
+     * @return array|null
+     */
+    public static function searchByEmail(?string $email): ?array
+    {
+        $result = null;
+
+        if (is_null($email)) {
+            return $result;
+        }
+
+        $emails = CustomerEmail::where('email', 'like', "%$email%")->get();
+
+        $emailsList = [];
+        $customerPreview = null;
+        foreach ($emails as $email) {
+            $customer_id = (int)$email->customer_id;
+            $emailsList[$customer_id]['emails'][] = $email->email;
+            if ($customerPreview != $customer_id) {
+                $customerPreview = $customer_id;
+                $customer = $email->customer;
+
+                $emailsList[$customer_id]['last_name'] = $customer->last_name;
+                $emailsList[$customer_id]['first_name'] = $customer->first_name;
+
+                foreach ($customer->customerPhones as $phone) {
+                    $emailsList[$customer_id]['phones'][] = (int)$phone->phone;
+                }
+            }
+        }
+
+
+
+        $result  = [
+            'customers' => $emailsList
         ];
 
         return $result;
