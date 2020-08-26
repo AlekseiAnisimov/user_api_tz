@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\CustomerPhone;
 use App\Models\CustomerEmail;
+use App\Models\CustomerSearch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -124,5 +125,20 @@ class CustomerController extends Controller
         }
 
         return response(null, 200);
+    }
+
+    public function search(Request $request)
+    {
+        $searchType = $request->get('id');
+        $body = $request->all();
+        $result = [];
+
+        switch ($searchType) {
+            case 'fio':
+                $result = CustomerSearch::searchByFio($body['last_name'], $body['first_name']);
+                break;
+        }
+
+        return $result;
     }
 }
