@@ -25,3 +25,5 @@ Route::prefix('v1')->group(function () {
     Route::post('customer/search', 'CustomerController@search');
     Route::put('customer/{id}', 'CustomerController@update');
 });
+
+Route::post('v1/register', 'RegisterController@register');
