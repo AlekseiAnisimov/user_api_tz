@@ -21,7 +21,7 @@ class LoggerMiddleWare
         $date = date('Y-m-d H:i:s');
         $name = $request->user->name;
         $email =  $request->user->email;
-        
+
         return $next($request);
     }
 }
