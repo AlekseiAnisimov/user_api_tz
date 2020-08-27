@@ -40,6 +40,8 @@ class CreatCustomerTables extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('customer');
+        Schema::dropIfExists('customer_phone');
+        Schema::dropIfExists('customer_email');
     }
 }
