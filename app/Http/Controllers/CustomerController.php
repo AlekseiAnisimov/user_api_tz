@@ -51,7 +51,7 @@ class CustomerController extends Controller
 
     public function add(Request $request)
     {
-       $body = $request->all();
+       $body = $request->input('customer');
        $valid = Validator::make($body, [
            'last_name' => 'required|string|min:2|max:255',
            'first_name' => 'required|string|min:2|max:255',
@@ -108,7 +108,7 @@ class CustomerController extends Controller
         try {
             DB::transaction(function () use ($customer, $id) {
                 $customer->delete();
-
+                //TODO: каскадное удаление данных с таблиц
                 $customerPhone = CustomerPhone::where('customer_id', $id)->get();
                 foreach ($customerPhone as $phone) {
                     $phone->delete();
@@ -131,7 +131,7 @@ class CustomerController extends Controller
     {
         //TODO:: добавить валидацию
         $searchType = $request->get('type');
-        $body = $request->all();
+        $body = $request->input('customer');
         $result = null;
 
         switch ($searchType) {
@@ -159,7 +159,7 @@ class CustomerController extends Controller
 
     public function update(Request $request, int $id)
     {
-        $body = $request->all();
+        $body = $request->input('customer');
         $valid = Validator::make($body, [
             'last_name' => 'required|string|min:2|max:255',
             'first_name' => 'required|string|min:2|max:255',
