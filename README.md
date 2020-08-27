@@ -27,4 +27,19 @@ http://your_host/api/v1/login
     в type передается тип поиска: 1) fio - по имени и фамилии. 2) phone -- по номеру телефона, 3) email -- по email'у, 4) all -- по всем параметрам 
 -- api/v1/customer/{id}; DELETE; Удаление по id
 
+Пример запроса добавления записи
 
+`{
+	"accessToken": "n1vR0PtUqr0mkUgy57GFs7io2eZGGZXqg20iPte7sff0CeSzdWKhbQDfixL5",
+	"customer": {
+		"last_name": "Иванов",
+		"first_name": "Иван",
+		"phones": [
+			12312312312,
+			12312312313
+		],
+		"emails": [
+			"email@email.ru"
+		]
+	}
+}`
