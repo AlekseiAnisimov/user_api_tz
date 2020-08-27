@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('v1')->group(function () {
+Route::middleware('auth.custom')->prefix('v1')->group(function () {
     Route::get('customer/{id}', 'CustomerController@show');
     Route::post('customer', 'CustomerController@add');
     Route::delete('customer/{id}', 'CustomerController@delete');
