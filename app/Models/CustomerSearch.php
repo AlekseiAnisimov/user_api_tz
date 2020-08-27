@@ -62,6 +62,7 @@ class CustomerSearch
 
         $phones = CustomerPhone::where('phone', 'like', "%$phone%")->get();
 
+        //TODO: исправить наименовать переменных
         $phonesList = [];
         $customerPreview = null;
         foreach ($phones as $phone) {
@@ -102,7 +103,7 @@ class CustomerSearch
         }
 
         $emails = CustomerEmail::where('email', 'like', "%$email%")->get();
-
+        //TODO: Исправить наименование переменных
         $emailsList = [];
         $customerPreview = null;
         foreach ($emails as $email) {
