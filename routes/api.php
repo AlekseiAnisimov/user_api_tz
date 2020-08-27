@@ -27,3 +27,4 @@ Route::prefix('v1')->group(function () {
 });
 
 Route::post('v1/register', 'RegisterController@register');
+Route::post('v1/login', 'LoginController@login');
