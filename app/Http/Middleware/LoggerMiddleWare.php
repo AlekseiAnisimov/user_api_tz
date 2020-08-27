@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\User;
+use App\Models\Log;
 
 class LoggerMiddleWare
 {
@@ -18,9 +19,15 @@ class LoggerMiddleWare
     {
         $route = $request->route()->uri;
         $method = $request->method();
-        $date = date('Y-m-d H:i:s');
         $name = $request->user->name;
         $email =  $request->user->email;
+
+        $log = new Log();
+        $log->route = $route;
+        $log->method = $method;
+        $log->name = $name;
+        $log->email = $email;
+        $log->save();
 
         return $next($request);
     }
