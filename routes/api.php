@@ -18,10 +18,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('v1')->group(function () {
+Route::middleware('auth.custom')->prefix('v1')->group(function () {
     Route::get('customer/{id}', 'CustomerController@show');
     Route::post('customer', 'CustomerController@add');
     Route::delete('customer/{id}', 'CustomerController@delete');
     Route::post('customer/search', 'CustomerController@search');
     Route::put('customer/{id}', 'CustomerController@update');
 });
+
+Route::post('v1/register', 'RegisterController@register');
+Route::post('v1/login', 'LoginController@login');
