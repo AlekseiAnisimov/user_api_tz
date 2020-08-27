@@ -26,6 +26,8 @@ class AuthMiddleWare
             return response(['error' => ['message' => 'User not found. Check token']], 403);
         }
 
+        $request->user = $user;
+
         return $next($request);
     }
 }
