@@ -45,7 +45,7 @@ class CustomerSearch
             'customers' => $data
         ];
 
-        return $result;
+        return array_value($result);
     }
 
     /**
@@ -83,7 +83,7 @@ class CustomerSearch
 
 
         $result  = [
-            'customers' => $phonesList
+            'customers' => array_values($phonesList)
         ];
 
         return $result;
@@ -124,7 +124,7 @@ class CustomerSearch
 
 
         $result  = [
-            'customers' => $emailsList
+            'customers' => array_values($emailsList)
         ];
 
         return $result;
@@ -136,7 +136,6 @@ class CustomerSearch
         $firstName = $params['first_name'];
         $phone = $params['phone'];
         $email = $params['email'];
-
 
         $query = DB::table('customer')
             ->join('customer_phone', 'customer.id', '=', 'customer_phone.customer_id')
@@ -169,7 +168,7 @@ class CustomerSearch
         }
 
         $result  = [
-            'customers' => $data
+            'customers' => array_values($data)
         ];
 
         return $result;
